@@ -104,7 +104,7 @@ group by customer_id)T on T.maximum= Q.frequency and T.customer_id=Q.customer_id
 
 
 -- 6. Which item was purchased first by the customer after they became a member?
-select T1.customer_id, T1.product_name
+select T1.customer_id, T1.product_name as first_bought_after_membership
 from (
 select s.customer_id, m.product_name, row_number() over
 (partition by s.customer_id order by members.join_date asc) as when_purchased_after_joining
@@ -116,7 +116,7 @@ where when_purchased_after_joining=1;
 
 -- 7. Which item was purchased just before the customer became a member?
 
-select T2.customer_id,T2.product_name 
+select T2.customer_id,T2.product_name as last_bought_before_membership
 from
 (select s.customer_id, m.product_name, s.order_date, row_number()
 over (partition by s.customer_id order by s.order_date desc) as when_purchased_before_joining
